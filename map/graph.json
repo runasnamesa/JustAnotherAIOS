@@ -1,0 +1,407 @@
+{
+ "generated_at": "2026-10-01T12:47:00",
+ "nodes": [
+  {
+   "id": "CLAUDE.md",
+   "kind": "root",
+   "title": "CLAUDE.md — roteador mestre",
+   "area": "root",
+   "summary": "Este arquivo não guarda fatos: só diz onde cada coisa mora. Para qualquer pergunta: 1. Olhe `map/MAP.md` (índice gerado, uma linha por nota) **ou** a placa da á",
+   "tags": [],
+   "hops": 0
+  },
+  {
+   "id": "areas/conteudo/CLAUDE.md",
+   "kind": "router",
+   "title": "Placa — Conteúdo",
+   "area": "conteudo",
+   "summary": "",
+   "tags": [],
+   "hops": 1
+  },
+  {
+   "id": "areas/conteudo/guia-de-estilo.md",
+   "kind": "note",
+   "title": "Guia de estilo",
+   "area": "conteudo",
+   "summary": "Guia de estilo de posts — tom, estrutura e lista de palavras proibidas.",
+   "tags": [
+    "conteudo",
+    "estilo"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/conteudo/ideias.md",
+   "kind": "note",
+   "title": "Ideias",
+   "area": "conteudo",
+   "summary": "Banco de ideias de conteúdo e o que está agendado para publicar.",
+   "tags": [
+    "conteudo"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/pessoal/CLAUDE.md",
+   "kind": "router",
+   "title": "Placa — Pessoal",
+   "area": "pessoal",
+   "summary": "",
+   "tags": [],
+   "hops": 1
+  },
+  {
+   "id": "areas/pessoal/saude.md",
+   "kind": "note",
+   "title": "Saúde",
+   "area": "pessoal",
+   "summary": "Metas e registros de saúde (sono, treino).",
+   "tags": [
+    "pessoal"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/projetos/CLAUDE.md",
+   "kind": "router",
+   "title": "Placa — Projetos",
+   "area": "projetos",
+   "summary": "O que existe aqui e quando abrir. Uma linha por nota.",
+   "tags": [],
+   "hops": 1
+  },
+  {
+   "id": "areas/projetos/ativos.md",
+   "kind": "note",
+   "title": "Projetos ativos",
+   "area": "projetos",
+   "summary": "Lista dos projetos ativos com estado, próximo passo e bloqueio de cada um.",
+   "tags": [
+    "projetos"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/projetos/decisoes.md",
+   "kind": "note",
+   "title": "Decisões",
+   "area": "projetos",
+   "summary": "Registro de decisões de projeto — data, contexto, escolha e alternativa descartada.",
+   "tags": [
+    "projetos",
+    "decisoes"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/sistema/CLAUDE.md",
+   "kind": "router",
+   "title": "Placa — Sistema",
+   "area": "sistema",
+   "summary": "Arquivos que o painel lê. Escritos por rotinas ou por você — nunca pelo painel.",
+   "tags": [],
+   "hops": 1
+  },
+  {
+   "id": "areas/sistema/agenda.md",
+   "kind": "note",
+   "title": "Agenda",
+   "area": "sistema",
+   "summary": "Compromissos com data no formato `- AAAA-MM-DD HH:MM — texto`, lidos pelo painel.",
+   "tags": [
+    "sistema",
+    "agenda"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/sistema/como-funciona.md",
+   "kind": "note",
+   "title": "Como funciona",
+   "area": "sistema",
+   "summary": "Arquitetura do AIOS — Memory, Agent, Pulse, Screen; máquinas, sync e travas de segurança.",
+   "tags": [
+    "sistema"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/sistema/precisa-de-voce.md",
+   "kind": "note",
+   "title": "Precisa de você",
+   "area": "sistema",
+   "summary": "A única lista que espera um humano. Claude adiciona itens; só o humano marca como feito.",
+   "tags": [
+    "sistema"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/sistema/resumo-do-dia.md",
+   "kind": "note",
+   "title": "Resumo do dia",
+   "area": "sistema",
+   "summary": "Resumo do dia (o que aconteceu durante a noite, o que vence hoje, quem espera resposta).",
+   "tags": [
+    "sistema"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/trabalho/CLAUDE.md",
+   "kind": "router",
+   "title": "Placa — Trabalho",
+   "area": "trabalho",
+   "summary": "",
+   "tags": [],
+   "hops": 1
+  },
+  {
+   "id": "areas/trabalho/clientes.md",
+   "kind": "note",
+   "title": "Clientes",
+   "area": "trabalho",
+   "summary": "Clientes ativos — contato, o que foi combinado, último contato.",
+   "tags": [
+    "trabalho",
+    "clientes"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "areas/trabalho/pipeline.md",
+   "kind": "note",
+   "title": "Pipeline",
+   "area": "trabalho",
+   "summary": "Pipeline de oportunidades com etapa e data do próximo follow-up.",
+   "tags": [
+    "trabalho",
+    "pipeline"
+   ],
+   "hops": 2
+  },
+  {
+   "id": "routine:heartbeat",
+   "kind": "routine",
+   "title": "heartbeat",
+   "area": "sistema",
+   "summary": "Prova diária de que servidor e modelo estão vivos: uma linha no Telegram.",
+   "host": "vps",
+   "schedule": "30 7 * * *"
+  },
+  {
+   "id": "routine:morning-digest",
+   "kind": "routine",
+   "title": "morning-digest",
+   "area": "sistema",
+   "summary": "Resumo da manhã: o que aconteceu à noite, o que vence hoje, quem espera resposta.",
+   "host": "vps",
+   "schedule": "35 7 * * *"
+  },
+  {
+   "id": "routine:outreach-pack",
+   "kind": "routine",
+   "title": "outreach-pack",
+   "area": "trabalho",
+   "summary": "Rascunha os follow-ups do dia a partir do pipeline. Nunca envia.",
+   "host": "vps",
+   "schedule": "0 7 * * 1-5"
+  },
+  {
+   "id": "routine:brain-build",
+   "kind": "routine",
+   "title": "brain-build",
+   "area": "sistema",
+   "summary": "Regera o mapa (MAP.md) e o grafo do painel a partir das notas.",
+   "host": "vps",
+   "schedule": "0 3 * * *"
+  },
+  {
+   "id": "routine:lint-routers",
+   "kind": "routine",
+   "title": "lint-routers",
+   "area": "sistema",
+   "summary": "Checagem noturna: placa apontando para arquivo movido, nota a mais de 2 saltos.",
+   "host": "vps",
+   "schedule": "10 3 * * *"
+  },
+  {
+   "id": "routine:weekly-review",
+   "kind": "routine",
+   "title": "weekly-review",
+   "area": "projetos",
+   "summary": "Revisão semanal: projetos parados, decisões pendentes, itens velhos em precisa-de-voce.",
+   "host": "mac",
+   "schedule": "0 18 * * 5"
+  },
+  {
+   "id": "skill:brain-build",
+   "kind": "skill",
+   "title": "/brain-build",
+   "area": "sistema",
+   "summary": "Regera map/MAP.md e map/graph.json e confere a saúde da memória.",
+   "model": "",
+   "host": "mac"
+  },
+  {
+   "id": "skill:calibrate",
+   "kind": "skill",
+   "title": "/calibrate",
+   "area": "sistema",
+   "summary": "Mede se o mapa ajuda — mesma pergunta com e sem mapa, compara tokens, tempo e custo.",
+   "model": "",
+   "host": "mac"
+  },
+  {
+   "id": "skill:interview",
+   "kind": "skill",
+   "title": "/interview",
+   "area": "sistema",
+   "summary": "Entrevista de ~20 min, uma pergunta por vez, para escrever o primeiro rascunho da memória.",
+   "model": "",
+   "host": "mac"
+  },
+  {
+   "id": "skill:lint-routers",
+   "kind": "skill",
+   "title": "/lint-routers",
+   "area": "sistema",
+   "summary": "Checa placas, links quebrados e notas a mais de 2 saltos; propõe correções.",
+   "model": "",
+   "host": "mac"
+  }
+ ],
+ "links": [
+  {
+   "source": "CLAUDE.md",
+   "target": "areas/projetos/CLAUDE.md",
+   "kind": "link"
+  },
+  {
+   "source": "CLAUDE.md",
+   "target": "areas/trabalho/CLAUDE.md",
+   "kind": "link"
+  },
+  {
+   "source": "CLAUDE.md",
+   "target": "areas/conteudo/CLAUDE.md",
+   "kind": "link"
+  },
+  {
+   "source": "CLAUDE.md",
+   "target": "areas/pessoal/CLAUDE.md",
+   "kind": "link"
+  },
+  {
+   "source": "CLAUDE.md",
+   "target": "areas/sistema/CLAUDE.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/conteudo/CLAUDE.md",
+   "target": "areas/conteudo/guia-de-estilo.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/conteudo/CLAUDE.md",
+   "target": "areas/conteudo/ideias.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/pessoal/CLAUDE.md",
+   "target": "areas/pessoal/saude.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/projetos/CLAUDE.md",
+   "target": "areas/projetos/ativos.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/projetos/CLAUDE.md",
+   "target": "areas/projetos/decisoes.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/sistema/CLAUDE.md",
+   "target": "areas/sistema/precisa-de-voce.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/sistema/CLAUDE.md",
+   "target": "areas/sistema/agenda.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/sistema/CLAUDE.md",
+   "target": "areas/sistema/resumo-do-dia.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/sistema/CLAUDE.md",
+   "target": "areas/sistema/como-funciona.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/trabalho/CLAUDE.md",
+   "target": "areas/trabalho/clientes.md",
+   "kind": "link"
+  },
+  {
+   "source": "areas/trabalho/CLAUDE.md",
+   "target": "areas/trabalho/pipeline.md",
+   "kind": "link"
+  },
+  {
+   "source": "routine:morning-digest",
+   "target": "areas/sistema/agenda.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:morning-digest",
+   "target": "areas/sistema/precisa-de-voce.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:morning-digest",
+   "target": "areas/sistema/resumo-do-dia.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:morning-digest",
+   "target": "areas/trabalho/pipeline.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:outreach-pack",
+   "target": "areas/conteudo/guia-de-estilo.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:outreach-pack",
+   "target": "areas/trabalho/clientes.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:outreach-pack",
+   "target": "areas/trabalho/pipeline.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:weekly-review",
+   "target": "areas/projetos/ativos.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:weekly-review",
+   "target": "areas/projetos/decisoes.md",
+   "kind": "uses"
+  },
+  {
+   "source": "routine:weekly-review",
+   "target": "areas/sistema/precisa-de-voce.md",
+   "kind": "uses"
+  }
+ ]
+}

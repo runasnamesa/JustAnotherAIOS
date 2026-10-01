@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "defaultMode": "dontAsk",
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit(/areas/**)",
+      "Edit(/drafts/**)",
+      "Bash(python3 -m aios brain)",
+      "Bash(python3 -m aios lint)",
+      "Bash(date)",
+      "Bash(ls *)"
+    ],
+    "deny": [
+      "WebFetch",
+      "WebSearch",
+      "mcp__*",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)",
+      "Bash(nc *)",
+      "Bash(rm *)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(mail *)",
+      "Bash(sendmail *)",
+      "Read(/.env)",
+      "Read(/.env.*)",
+      "Read(~/.aios.env)",
+      "Read(~/.ssh/**)",
+      "Read(~/.claude/.credentials.json)"
+    ]
+  }
+}

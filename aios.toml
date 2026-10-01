@@ -1,0 +1,13 @@
+# Configuração do JustAnotherAIOS
+
+[hosts]
+# nome lógico = lista de hostnames reais (saída de `hostname`). AIOS_HOST sobrescreve.
+mac = ["macbook", "macbook-pro", "meu-mac"]
+vps = ["vps", "aios-vps"]
+
+[memory]
+root_max_lines = 60   # CLAUDE.md raiz guarda ponteiros, não fatos
+
+[pulse]
+max_consecutive_failures = 3   # depois disso a rotina pausa até `python -m aios reset NOME`
+max_runs_per_day = 40          # teto por host: uma rotina em loop não queima a cota do mês

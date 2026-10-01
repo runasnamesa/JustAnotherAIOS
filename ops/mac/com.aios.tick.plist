@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Copie para ~/Library/LaunchAgents/, ajuste o caminho e:
+     launchctl load ~/Library/LaunchAgents/com.aios.tick.plist
+     Obs.: flock não vem no macOS; instale com `brew install flock`. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.aios.tick</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string><string>-lc</string>
+    <string>AIOS_HOST=mac ~/JustAnotherAIOS/ops/tick.sh</string>
+  </array>
+  <key>StartInterval</key><integer>300</integer>
+  <key>RunAtLoad</key><true/>
+  <key>StandardOutPath</key><string>/tmp/aios-tick.log</string>
+  <key>StandardErrorPath</key><string>/tmp/aios-tick.log</string>
+</dict>
+</plist>

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+.agent.json
+.claude/settings.local.json
+runs/log/
