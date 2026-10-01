@@ -1,0 +1,14 @@
+[Unit]
+Description=AIOS bot do Telegram
+After=network-online.target
+
+[Service]
+User=aios
+WorkingDirectory=/home/aios/JustAnotherAIOS
+EnvironmentFile=/home/aios/.aios.env
+ExecStart=/usr/bin/python3 -m aios telegram
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

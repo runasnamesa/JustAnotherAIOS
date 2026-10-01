@@ -1,0 +1,11 @@
+[Unit]
+Description=AIOS tick (sync + pulse)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=aios
+WorkingDirectory=/home/aios/JustAnotherAIOS
+EnvironmentFile=/home/aios/.aios.env
+ExecStart=/home/aios/JustAnotherAIOS/ops/tick.sh
+TimeoutStartSec=45min

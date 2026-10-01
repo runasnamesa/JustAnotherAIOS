@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--HEAD-->
+<title>JustAnotherAIOS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%276%27 fill=%27%23ff6a2b%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&family=Geist+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<!--/HEAD-->
+</head>
+<body>
+<header class="top">
+  <span class="host" id="host">—</span>
+  <h1><span class="dot">◉</span> JUST ANOTHER <b>AI OS</b></h1>
+  <span class="updated" id="updated">—</span>
+</header>
+
+<main class="grid">
+  <aside class="col left">
+    <section class="card">
+      <h2>Hoje</h2>
+      <div class="clock" id="clock">--:--</div>
+      <div class="muted" id="date">—</div>
+    </section>
+    <section class="card">
+      <h2>Próximos 14 dias</h2>
+      <ul id="agenda" class="list"></ul>
+    </section>
+    <section class="card grow">
+      <h2>Resumo do dia</h2>
+      <pre id="brief" class="brief"></pre>
+    </section>
+  </aside>
+
+  <section class="col center card">
+    <div class="toolbar">
+      <div class="tabs" id="views">
+        <button data-view="rings" class="on">Anéis</button>
+        <button data-view="circle">Círculo</button>
+        <button data-view="areas">Áreas</button>
+        <button data-view="links">Links</button>
+        <button data-view="timeline">Linha do tempo</button>
+        <button data-view="orbit">Órbita 3D</button>
+      </div>
+      <span id="stats" class="stats muted"></span>
+    </div>
+    <div class="toolbar">
+      <button id="motion" class="toggle">movimento</button>
+      <input id="search" type="search" placeholder="buscar arquivo, rotina, skill…" autocomplete="off">
+    </div>
+    <div class="chips" id="areas"></div>
+    <div class="stage">
+      <canvas id="graph"></canvas>
+      <div id="tip" class="tip" hidden></div>
+      <div id="info" class="info" hidden></div>
+    </div>
+    <div class="legend muted">⬡ CLAUDE.md · ◉ área · • nota · ◆ skill · ▲ rotina · ■ aplicação. Clique num ponto para ver; “abrir” mostra o arquivo.</div>
+  </section>
+
+  <aside class="col right">
+    <section class="card">
+      <h2>Precisa de você <span class="count" id="needs-count">0</span></h2>
+      <ul id="needs" class="list needs"></ul>
+      <div class="muted small">Só você marca como feito, editando o arquivo.</div>
+    </section>
+    <section class="card">
+      <h2>Rotinas</h2>
+      <div class="routines-wrap"><table class="routines"><tbody id="routines"></tbody></table></div>
+    </section>
+    <section class="card">
+      <h2>Skills</h2>
+      <div id="skills" class="deck"></div>
+      <div id="confirm" class="confirm" hidden></div>
+      <div class="muted small" id="queue-info"></div>
+    </section>
+  </aside>
+</main>
+
+<dialog id="viewer">
+  <header><code id="viewer-path"></code><button id="viewer-close">fechar</button></header>
+  <pre id="viewer-text"></pre>
+</dialog>
+
+<!--DATA-->
+<script src="app.js"></script>
+</body>
+</html>

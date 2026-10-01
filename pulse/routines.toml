@@ -1,0 +1,55 @@
+# routines.toml — toda rotina do sistema, uma entrada cada.
+# Um scheduler em cada máquina roda `python -m aios pulse` a cada 5 min e executa o que venceu
+# para o host dela. Toda execução deixa registro em runs/ — é isso que o painel lê.
+#
+# kind = "claude" → `claude -p <prompt>` com o arquivo de pulse/prompts/
+# kind = "skill"  → `claude -p /<skill>` (skill em .claude/commands/)
+# kind = "script" → comando shell, sem custo de modelo
+
+[[routine]]
+name = "heartbeat"
+purpose = "Prova diária de que servidor e modelo estão vivos: uma linha no Telegram."
+schedule = "30 7 * * *"
+host = "vps"
+kind = "script"
+run = "echo \"♥ $(hostname) vivo em $(date '+%d/%m %H:%M')\" | python3 -m aios notify"
+
+[[routine]]
+name = "morning-digest"
+purpose = "Resumo da manhã: o que aconteceu à noite, o que vence hoje, quem espera resposta."
+schedule = "35 7 * * *"
+host = "vps"
+kind = "claude"
+prompt = "pulse/prompts/morning-digest.md"
+
+[[routine]]
+name = "outreach-pack"
+purpose = "Rascunha os follow-ups do dia a partir do pipeline. Nunca envia."
+schedule = "0 7 * * 1-5"
+host = "vps"
+kind = "claude"
+prompt = "pulse/prompts/outreach-pack.md"
+
+[[routine]]
+name = "brain-build"
+purpose = "Regera o mapa (MAP.md) e o grafo do painel a partir das notas."
+schedule = "0 3 * * *"
+host = "vps"
+kind = "script"
+run = "python3 -m aios brain"
+
+[[routine]]
+name = "lint-routers"
+purpose = "Checagem noturna: placa apontando para arquivo movido, nota a mais de 2 saltos."
+schedule = "10 3 * * *"
+host = "vps"
+kind = "script"
+run = "python3 -m aios lint"
+
+[[routine]]
+name = "weekly-review"
+purpose = "Revisão semanal: projetos parados, decisões pendentes, itens velhos em precisa-de-voce."
+schedule = "0 18 * * 5"
+host = "mac"
+kind = "claude"
+prompt = "pulse/prompts/weekly-review.md"
