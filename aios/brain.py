@@ -22,6 +22,19 @@ MAP_FILE = "map/MAP.md"
 GRAPH_FILE = "map/graph.json"
 _PATH_REF = re.compile(r"\b(areas/[\w./-]+\.md)\b")
 
+# Aplicações: as peças do sistema que leem/escrevem a memória (anel externo do painel).
+APPS = [
+    ("painel", "screen/index.html", "Painel: mostra, nunca guarda",
+     ["areas/sistema/precisa-de-voce.md", "areas/sistema/agenda.md", "areas/sistema/resumo-do-dia.md"]),
+    ("telegram", "aios/telegram.py", "Bot do Telegram na VPS: voz/texto → Claude → resposta", []),
+    ("pulse", "pulse/routines.toml", "Agendador: roda as rotinas vencidas em cada máquina", []),
+    ("sync", "ops/sync.sh", "Sincroniza a pasta entre Mac e VPS via git a cada 5 min", []),
+]
+
+
+def _modified(path: Path) -> str:
+    return datetime.fromtimestamp(path.stat().st_mtime).date().isoformat()
+
 
 def _skills(root: Path) -> list[dict]:
     out = []
@@ -59,7 +72,8 @@ def build_graph(root: Path, notes: dict[str, vault.Note]) -> dict:
     for n in notes.values():
         kind = "root" if n.path == vault.ROOT_ROUTER else ("router" if n.is_router else "note")
         nodes.append({"id": n.path, "kind": kind, "title": n.title, "area": n.area,
-                      "summary": n.summary, "tags": n.tags, "hops": hops.get(n.path)})
+                      "summary": n.summary, "tags": n.tags, "hops": hops.get(n.path),
+                      "modified": _modified(root / n.path)})
         links += [{"source": n.path, "target": t, "kind": "link"} for t in n.links]
     for r in load_routines(root):
         rid = f"routine:{r.name}"
@@ -76,6 +90,11 @@ def build_graph(root: Path, notes: dict[str, vault.Note]) -> dict:
         nodes.append({"id": sid, "kind": "skill", "title": f"/{s['name']}", "area": "sistema",
                       "summary": s["summary"], "model": s["model"], "host": s["host"]})
         links += [{"source": sid, "target": p, "kind": "uses"} for p in s["refs"] if p in notes]
+    for name, path, summary, reads in APPS:
+        aid = f"app:{name}"
+        nodes.append({"id": aid, "kind": "app", "title": name, "area": "sistema", "summary": summary,
+                      "path": path})
+        links += [{"source": aid, "target": p, "kind": "uses"} for p in reads if p in notes]
     # a área de rotinas/skills passa a ser a da nota que mais tocam (o painel colore por área)
     by_id = {n["id"]: n for n in nodes}
     for n in nodes:

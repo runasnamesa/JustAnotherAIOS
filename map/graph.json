@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-01T14:17:30",
+ "generated_at": "2026-10-01T14:40:23",
  "nodes": [
   {
    "id": "CLAUDE.md",
@@ -8,7 +8,8 @@
    "area": "root",
    "summary": "Este arquivo não guarda fatos: só diz onde cada coisa mora. Para qualquer pergunta: 1. Olhe `map/MAP.md` (índice gerado, uma linha por nota) **ou** a placa da á",
    "tags": [],
-   "hops": 0
+   "hops": 0,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/conteudo/CLAUDE.md",
@@ -17,7 +18,8 @@
    "area": "conteudo",
    "summary": "",
    "tags": [],
-   "hops": 1
+   "hops": 1,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/conteudo/guia-de-estilo.md",
@@ -29,7 +31,8 @@
     "conteudo",
     "estilo"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/conteudo/ideias.md",
@@ -40,7 +43,8 @@
    "tags": [
     "conteudo"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/pessoal/CLAUDE.md",
@@ -49,7 +53,8 @@
    "area": "pessoal",
    "summary": "",
    "tags": [],
-   "hops": 1
+   "hops": 1,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/pessoal/saude.md",
@@ -60,7 +65,8 @@
    "tags": [
     "pessoal"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/projetos/CLAUDE.md",
@@ -69,7 +75,8 @@
    "area": "projetos",
    "summary": "O que existe aqui e quando abrir. Uma linha por nota.",
    "tags": [],
-   "hops": 1
+   "hops": 1,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/projetos/ativos.md",
@@ -80,7 +87,8 @@
    "tags": [
     "projetos"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/projetos/decisoes.md",
@@ -92,7 +100,8 @@
     "projetos",
     "decisoes"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/sistema/CLAUDE.md",
@@ -101,7 +110,8 @@
    "area": "sistema",
    "summary": "Arquivos que o painel lê. Escritos por rotinas ou por você — nunca pelo painel.",
    "tags": [],
-   "hops": 1
+   "hops": 1,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/sistema/agenda.md",
@@ -113,7 +123,8 @@
     "sistema",
     "agenda"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/sistema/como-funciona.md",
@@ -124,7 +135,8 @@
    "tags": [
     "sistema"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/sistema/precisa-de-voce.md",
@@ -135,7 +147,8 @@
    "tags": [
     "sistema"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/sistema/resumo-do-dia.md",
@@ -146,7 +159,8 @@
    "tags": [
     "sistema"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/trabalho/CLAUDE.md",
@@ -155,7 +169,8 @@
    "area": "trabalho",
    "summary": "",
    "tags": [],
-   "hops": 1
+   "hops": 1,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/trabalho/clientes.md",
@@ -167,7 +182,8 @@
     "trabalho",
     "clientes"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "areas/trabalho/pipeline.md",
@@ -179,7 +195,8 @@
     "trabalho",
     "pipeline"
    ],
-   "hops": 2
+   "hops": 2,
+   "modified": "2026-10-01"
   },
   {
    "id": "routine:heartbeat",
@@ -270,6 +287,38 @@
    "summary": "Checa placas, links quebrados e notas a mais de 2 saltos; propõe correções.",
    "model": "",
    "host": "mac"
+  },
+  {
+   "id": "app:painel",
+   "kind": "app",
+   "title": "painel",
+   "area": "sistema",
+   "summary": "Painel: mostra, nunca guarda",
+   "path": "screen/index.html"
+  },
+  {
+   "id": "app:telegram",
+   "kind": "app",
+   "title": "telegram",
+   "area": "sistema",
+   "summary": "Bot do Telegram na VPS: voz/texto → Claude → resposta",
+   "path": "aios/telegram.py"
+  },
+  {
+   "id": "app:pulse",
+   "kind": "app",
+   "title": "pulse",
+   "area": "sistema",
+   "summary": "Agendador: roda as rotinas vencidas em cada máquina",
+   "path": "pulse/routines.toml"
+  },
+  {
+   "id": "app:sync",
+   "kind": "app",
+   "title": "sync",
+   "area": "sistema",
+   "summary": "Sincroniza a pasta entre Mac e VPS via git a cada 5 min",
+   "path": "ops/sync.sh"
   }
  ],
  "links": [
@@ -401,6 +450,21 @@
   {
    "source": "routine:weekly-review",
    "target": "areas/sistema/precisa-de-voce.md",
+   "kind": "uses"
+  },
+  {
+   "source": "app:painel",
+   "target": "areas/sistema/precisa-de-voce.md",
+   "kind": "uses"
+  },
+  {
+   "source": "app:painel",
+   "target": "areas/sistema/agenda.md",
+   "kind": "uses"
+  },
+  {
+   "source": "app:painel",
+   "target": "areas/sistema/resumo-do-dia.md",
    "kind": "uses"
   }
  ]

@@ -73,7 +73,15 @@ def snapshot(root: Path = ROOT, now: datetime | None = None) -> dict:
     now = now or datetime.now()
     graph_path = root / "map" / "graph.json"
     queue = [json.loads(p.read_text()) for p in sorted((root / "runs" / "queue").glob("*.json"))]
-    done = sorted((root / "runs" / "done").glob("*.json"))[-15:]
+    done_all = sorted((root / "runs" / "done").glob("*.json"))
+    done = done_all[-15:]
+    since = (now.date() - timedelta(days=13)).isoformat()
+    history = []
+    for p in done_all:
+        r = json.loads(p.read_text())
+        if r.get("finished_at", "")[:10] >= since:
+            history.append({"name": r["name"], "kind": r.get("kind", ""), "status": r.get("status", ""),
+                            "at": r.get("finished_at", ""), "host": r.get("ran_on", "")})
     return {
         "now": now.replace(microsecond=0).isoformat(),
         "host": current_host(root),
@@ -83,5 +91,7 @@ def snapshot(root: Path = ROOT, now: datetime | None = None) -> dict:
         "routines": routines_board(root, now),
         "queue": queue,
         "recent_runs": [json.loads(p.read_text()) for p in reversed(done)],
+        "runs_total": len(done_all),
+        "run_history": history,
         "graph": json.loads(graph_path.read_text()) if graph_path.exists() else {"nodes": [], "links": []},
     }

@@ -6,6 +6,7 @@
   --ok: #3ecf8e; --warn: #f5b942; --bad: #ff5a5a;
   --graph-ring: #34343c; --graph-link: rgba(255, 255, 255, .14); --graph-link-dim: rgba(255, 255, 255, .04);
   --graph-label: #e9e7e4; --graph-halo: #ffffff;
+  --ring-skill: #ff8a4c; --ring-memory: #b98cff; --ring-routine: #f5b942; --ring-app: #7fb2ff;
   --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   color-scheme: dark;
@@ -17,6 +18,7 @@
     --ok: #1a8a57; --warn: #a86b00; --bad: #c92a2a;
     --graph-ring: #d8d5cf; --graph-link: rgba(20, 20, 30, .18); --graph-link-dim: rgba(20, 20, 30, .05);
     --graph-label: #1b1a1e; --graph-halo: #1b1a1e;
+    --ring-skill: #c2410c; --ring-memory: #7c3aed; --ring-routine: #a16207; --ring-app: #1d4ed8;
     color-scheme: light;
   }
 }
@@ -26,6 +28,7 @@
   --ok: #1a8a57; --warn: #a86b00; --bad: #c92a2a;
   --graph-ring: #d8d5cf; --graph-link: rgba(20, 20, 30, .18); --graph-link-dim: rgba(20, 20, 30, .05);
   --graph-label: #1b1a1e; --graph-halo: #1b1a1e;
+  --ring-skill: #c2410c; --ring-memory: #7c3aed; --ring-routine: #a16207; --ring-app: #1d4ed8;
   color-scheme: light;
 }
 
@@ -65,12 +68,18 @@ h2 { margin: 0 0 8px; font: 600 11px var(--mono); letter-spacing: .12em; text-tr
 
 .center { min-height: 0; display: flex; flex-direction: column; }
 .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.tabs { display: flex; gap: 6px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.stats { margin-left: auto; font: 11px var(--mono); font-variant-numeric: tabular-nums; }
+.center .toolbar + .toolbar { margin-top: 8px; }
+.toggle { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 10px; font: 11px var(--mono); cursor: pointer; }
+.toggle.on { color: var(--accent); border-color: var(--accent); }
+.chips button small { color: var(--muted); }
 .tabs button, .chips button, .deck button, dialog button, .confirm button {
   background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 6px;
   padding: 4px 10px; font: 11px var(--mono); cursor: pointer; }
-.tabs button.on, .chips button.on { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
-#search { flex: 1; min-width: 160px; background: var(--bg); color: var(--text); border: 1px solid var(--line);
+.tabs button.on, .chips button.on, .chips button.on small { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+#search { flex: 1; min-width: 140px; background: var(--bg); color: var(--text); border: 1px solid var(--line);
   border-radius: 6px; padding: 6px 10px; font: 12px var(--mono); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
 .chips button i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
