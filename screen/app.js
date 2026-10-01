@@ -1,7 +1,11 @@
 // AIOS screen — só mostra. Todo dado vem de /api/snapshot (lido dos arquivos na hora).
+// Modo estático (`python -m aios export`): window.AIOS_STATIC traz o snapshot e os arquivos
+// embutidos; os botões só simulam a fila, nada é executado.
 "use strict";
 
-const AREA_COLORS = ["#ff6a2b", "#5aa9ff", "#3ecf8e", "#c084fc", "#f5b942", "#ff5a8a", "#4dd4d4", "#a3e635"];
+const STATIC = window.AIOS_STATIC || null;
+const AREA_COLORS = ["#ff6a2b", "#4f9dff", "#2fbf7f", "#b07cf5", "#e0a526", "#f0527f", "#2fb8b8", "#8cc63f"];
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const $ = (id) => document.getElementById(id);
 const el = (tag, props = {}, ...kids) => {
   const n = Object.assign(document.createElement(tag), props);
@@ -15,12 +19,16 @@ const state = { snap: null, view: "rings", area: null, query: "", selected: null
 // ------------------------------------------------------------------ dados
 
 async function load() {
-  try {
-    const r = await fetch("/api/snapshot", { cache: "no-store" });
-    state.snap = await r.json();
-  } catch (e) {
-    $("updated").textContent = "sem conexão com o servidor";
-    return;
+  if (STATIC) {
+    state.snap ||= structuredClone(STATIC.snapshot);
+  } else {
+    try {
+      const r = await fetch("/api/snapshot", { cache: "no-store" });
+      state.snap = await r.json();
+    } catch (e) {
+      $("updated").textContent = "sem conexão com o servidor";
+      return;
+    }
   }
   renderPanels();
   const g = state.snap.graph;
@@ -31,7 +39,12 @@ async function load() {
 function renderPanels() {
   const s = state.snap;
   $("host").textContent = `host: ${s.host}`;
-  $("updated").textContent = `lido dos arquivos às ${s.now.slice(11, 16)}`;
+  const stamp = `${s.now.slice(8, 10)}/${s.now.slice(5, 7)} ${s.now.slice(11, 16)}`;
+  if (STATIC) {
+    $("updated").replaceChildren(`snapshot de ${stamp}`, el("span", { className: "demo-flag", textContent: STATIC.label || "estático" }));
+  } else {
+    $("updated").textContent = `lido dos arquivos às ${s.now.slice(11, 16)}`;
+  }
 
   $("agenda").replaceChildren(...(s.agenda.length ? s.agenda.map((e) =>
     el("li", {}, el("span", { className: "when", textContent: `${e.date.slice(8)}/${e.date.slice(5, 7)} ${e.time}` }), e.text))
@@ -64,25 +77,63 @@ function renderPanels() {
     b.onclick = () => enqueue("skill", k.title.slice(1));
     return b;
   }));
-  $("queue-info").textContent = s.queue.length
-    ? `${s.queue.length} na fila: ${s.queue.map((q) => `${q.name}@${q.host}`).join(", ")}`
-    : "fila vazia — o botão grava um pedido; o runner do host executa no próximo tick (≤5 min)";
+  $("queue-info").textContent = state.notice || (s.queue.length
+    ? `${s.queue.length} na fila: ${s.queue.map((q) => `${q.name} → ${q.host}`).join(", ")}`
+    : "Fila vazia. O botão grava um pedido; o runner do host executa no próximo ciclo (até 5 min).");
 }
 
-async function enqueue(kind, name) {
-  if (!confirm(`Enfileirar ${kind} "${name}"?`)) return;
-  const r = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json", "X-AIOS": "1" },
-    body: JSON.stringify({ kind, name }) });
-  const j = await r.json();
-  alert(r.ok ? `Na fila para ${j.host}: ${j.queued}` : `Erro: ${j.error}`);
-  load();
+function hostFor(kind, name) {
+  const s = state.snap;
+  if (kind === "routine") return (s.routines.find((r) => r.name === name) || {}).host || "?";
+  return (s.graph.nodes.find((n) => n.id === `skill:${name}`) || {}).host || "mac";
+}
+
+// confirmação dentro da página (o visualizador de artefatos não mostra confirm/alert)
+function enqueue(kind, name) {
+  const box = $("confirm");
+  const what = kind === "routine" ? "a rotina" : "a skill";
+  const go = el("button", { className: "go", textContent: "Enfileirar" });
+  const cancel = el("button", { textContent: "Cancelar" });
+  box.replaceChildren(el("span", { textContent: `Enfileirar ${what} ${name} para rodar em ${hostFor(kind, name)}?` }), go, cancel);
+  box.hidden = false;
+  cancel.onclick = () => { box.hidden = true; };
+  go.onclick = async () => {
+    box.hidden = true;
+    state.notice = await sendRun(kind, name);
+    renderPanels();
+    setTimeout(() => { state.notice = ""; renderPanels(); }, 6000);
+  };
+  go.focus();
+}
+
+async function sendRun(kind, name) {
+  if (STATIC) {
+    const host = hostFor(kind, name);
+    state.snap.queue.push({ kind, name, host, source: "screen" });
+    return `Simulado: ${name} entrou na fila de ${host}. Nesta versão estática nada é executado.`;
+  }
+  try {
+    const r = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json", "X-AIOS": "1" },
+      body: JSON.stringify({ kind, name }) });
+    const j = await r.json();
+    load();
+    return r.ok ? `Na fila de ${j.host}: ${j.queued}` : `Não enfileirado: ${j.error}`;
+  } catch (e) {
+    return "Não enfileirado: o servidor do painel não respondeu.";
+  }
 }
 
 async function openFile(path) {
-  const r = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
-  const j = await r.json();
+  let text;
+  if (STATIC) {
+    text = STATIC.files[path] ?? "Este arquivo não foi incluído no snapshot.";
+  } else {
+    const r = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+    const j = await r.json();
+    text = r.ok ? j.text : j.error;
+  }
   $("viewer-path").textContent = path;
-  $("viewer-text").textContent = r.ok ? j.text : j.error;
+  $("viewer-text").textContent = text;
   $("viewer").showModal();
 }
 $("viewer-close").onclick = () => $("viewer").close();
@@ -191,7 +242,7 @@ function visible(n) {
   return areaOk && qOk;
 }
 
-function color(n) { return n.kind === "root" ? "#ffffff" : state.areaColor[n.area] || "#888"; }
+function color(n) { return n.kind === "root" ? css("--accent") : state.areaColor[n.area] || css("--muted"); }
 
 function shape(n, r) {
   ctx.beginPath();
@@ -219,16 +270,18 @@ function draw() {
   ctx.clearRect(0, 0, W, H);
   const cx = W / 2, cy = H / 2, R = Math.min(W, H) / 2 - 24;
   if (state.view === "rings") {
-    ctx.strokeStyle = "#34343c"; ctx.setLineDash([2, 5]);
+    ctx.strokeStyle = css("--graph-ring"); ctx.setLineDash([2, 5]);
     [0.32, 0.62, 0.84, 0.98].forEach((k) => { ctx.beginPath(); ctx.arc(cx, cy, R * k, 0, Math.PI * 2); ctx.stroke(); });
     ctx.setLineDash([]);
   }
   const sel = state.selected;
+  const accent = css("--accent"), linkC = css("--graph-link"), dimC = css("--graph-link-dim");
+  const halo = css("--graph-halo"), labelC = css("--graph-label");
   const near = sel ? new Set(state.links.filter((l) => l.s === sel || l.t === sel).flatMap((l) => [l.s, l.t])) : null;
   state.links.forEach((l) => {
     const on = visible(l.s) && visible(l.t);
     const hl = sel && (l.s === sel || l.t === sel);
-    ctx.strokeStyle = hl ? "#ff6a2b" : on ? (l.kind === "link" ? "#ffffff22" : "#ff6a2b33") : "#ffffff08";
+    ctx.strokeStyle = hl ? accent : on ? (l.kind === "link" ? linkC : accent + "55") : dimC;
     ctx.lineWidth = hl ? 1.6 : 1;
     ctx.beginPath(); ctx.moveTo(l.s.x, l.s.y); ctx.lineTo(l.t.x, l.t.y); ctx.stroke();
   });
@@ -236,11 +289,11 @@ function draw() {
     const on = visible(n) && (!near || near.has(n) || n === sel);
     ctx.globalAlpha = on ? 1 : 0.12;
     shape(n, radius(n));
-    ctx.fillStyle = n.kind === "root" ? "#ff6a2b" : color(n);
+    ctx.fillStyle = color(n);
     ctx.fill();
-    if (n === state.hover || n === sel) { ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke(); }
+    if (n === state.hover || n === sel) { ctx.strokeStyle = halo; ctx.lineWidth = 2; ctx.stroke(); }
     if (on && (n.kind === "root" || n.kind === "router" || n === state.hover)) {
-      ctx.fillStyle = "#e8e6e3"; ctx.font = "10px ui-monospace, Menlo, monospace"; ctx.textAlign = "center";
+      ctx.fillStyle = labelC; ctx.font = `10px ${css("--mono")}`; ctx.textAlign = "center";
       const label = n.kind === "router" ? n.area.toUpperCase() : n.kind === "root" ? "CLAUDE.md" : n.title;
       ctx.fillText(label, n.x, n.y + radius(n) + 12);
     }
@@ -296,5 +349,5 @@ function tickClock() {
 }
 
 tickClock(); setInterval(tickClock, 15000);
-resize(); load(); setInterval(load, 30000);
+resize(); load(); if (!STATIC) setInterval(load, 30000);
 requestAnimationFrame(draw);

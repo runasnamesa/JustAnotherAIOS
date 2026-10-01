@@ -10,6 +10,7 @@
   status             imprime o snapshot que o painel mostra (sem o grafo)
   telegram           bot do Telegram (VPS)
   notify [ARQUIVO]   manda o texto (arquivo ou stdin) para o Telegram
+  export SAIDA.html  painel como HTML estático único [--fragment] [--label TEXTO]
 """
 from __future__ import annotations
 
@@ -38,6 +39,10 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("serve")
     p.add_argument("--bind", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8765)
+    p = sub.add_parser("export")
+    p.add_argument("out")
+    p.add_argument("--fragment", action="store_true")
+    p.add_argument("--label", default="estático")
     p = sub.add_parser("notify")
     p.add_argument("file", nargs="?")
     a = ap.parse_args(argv)
@@ -78,6 +83,11 @@ def main(argv: list[str] | None = None) -> int:
     elif a.cmd == "telegram":
         from . import telegram
         telegram.poll(ROOT)
+    elif a.cmd == "export":
+        from . import export
+        html = export.render(ROOT, a.label, a.fragment)
+        open(a.out, "w", encoding="utf-8").write(html)
+        print(f"{a.out}: {len(html) // 1024} KB")
     elif a.cmd == "notify":
         from . import telegram
         text = open(a.file, encoding="utf-8").read() if a.file else sys.stdin.read()

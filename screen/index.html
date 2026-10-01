@@ -2,10 +2,13 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AIOS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--HEAD-->
+<title>JustAnotherAIOS</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%276%27 fill=%27%23ff6a2b%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&family=Geist+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="style.css">
+<!--/HEAD-->
 </head>
 <body>
 <header class="top">
@@ -45,7 +48,7 @@
       <div id="tip" class="tip" hidden></div>
       <div id="info" class="info" hidden></div>
     </div>
-    <div class="legend muted">○ nota · ◇ placa · △ rotina · □ skill — clique para ver, “abrir” para ler o arquivo</div>
+    <div class="legend muted">○ nota · ◇ placa · △ rotina · □ skill. Clique num ponto para ver; “abrir” mostra o arquivo.</div>
   </section>
 
   <aside class="col right">
@@ -56,11 +59,12 @@
     </section>
     <section class="card">
       <h2>Rotinas</h2>
-      <table class="routines"><tbody id="routines"></tbody></table>
+      <div class="routines-wrap"><table class="routines"><tbody id="routines"></tbody></table></div>
     </section>
     <section class="card">
       <h2>Skills</h2>
       <div id="skills" class="deck"></div>
+      <div id="confirm" class="confirm" hidden></div>
       <div class="muted small" id="queue-info"></div>
     </section>
   </aside>
@@ -71,6 +75,7 @@
   <pre id="viewer-text"></pre>
 </dialog>
 
+<!--DATA-->
 <script src="app.js"></script>
 </body>
 </html>

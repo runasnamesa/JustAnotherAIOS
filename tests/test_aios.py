@@ -215,6 +215,18 @@ class TelegramAndMeasureTest(FakeClaudeWorkspace):
         finally:
             os.environ.pop("AIOS_TELEGRAM_ALLOWED")
 
+    def test_notify_without_destination_fails_loudly(self):
+        from aios import telegram
+        for env in ({}, {"AIOS_TELEGRAM_TOKEN": "x"}):
+            with self.subTest(env=env):
+                os.environ.update(env)
+                try:
+                    with self.assertRaises(SystemExit):
+                        telegram.send_message("oi")
+                finally:
+                    for k in env:
+                        os.environ.pop(k)
+
     def test_measure_strips_map_from_baseline(self):
         from aios import measure
         copies = measure.make_copies(self.root, self.tmp / "m")
@@ -277,6 +289,22 @@ class ScreenTest(Workspace):
     def test_checked_items_are_not_needs(self):
         self.write("areas/sistema/precisa-de-voce.md", "- [x] **Feito** — ok\n- [ ] **Aberto**\n")
         self.assertEqual([n["title"] for n in status.needs_you(self.root)], ["Aberto"])
+
+    def test_export_is_self_contained_and_escapes_script_tags(self):
+        from aios import export
+        self.write("areas/pessoal/saude.md", "---\nsummary: x\n---\n# Saúde\n</script><script>alert(1)</script>\n")
+        full = export.render(self.root, "teste")
+        frag = export.render(self.root, "teste", fragment=True)
+        self.assertTrue(full.startswith("<!doctype html>"))
+        self.assertNotIn("<html", frag)
+        self.assertNotIn("<body", frag)
+        for html in (full, frag):
+            self.assertNotIn('href="style.css"', html)
+            self.assertNotIn('src="app.js"', html)
+            self.assertIn("window.AIOS_STATIC", html)
+            self.assertEqual(html.count("</script><script>alert"), 0)  # nota não fecha a tag
+            self.assertIn("areas/conteudo/guia-de-estilo.md", html)
+            self.assertNotIn("aios/serve.py", html)  # só arquivos legíveis pelo painel
 
     def test_agenda_only_next_14_days_sorted(self):
         self.write("areas/sistema/agenda.md", "- 2026-10-20 — longe\n- 2026-10-05 09:00 — b\n"

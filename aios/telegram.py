@@ -45,7 +45,10 @@ def _call(method: str, http_timeout: int = 40, **params) -> dict:
 
 
 def send_message(text: str, chat_id: int | None = None) -> None:
+    _token()
     targets = [chat_id] if chat_id else sorted(allowed_chats())
+    if not targets:  # sem destino não é sucesso: o heartbeat ficaria verde sem avisar ninguém
+        raise SystemExit("defina AIOS_TELEGRAM_ALLOWED com seu chat_id")
     for cid in targets:
         for i in range(0, max(len(text), 1), MAX_LEN):
             _call("sendMessage", chat_id=cid, text=text[i:i + MAX_LEN] or "(vazio)")

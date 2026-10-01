@@ -49,6 +49,7 @@ python3 -m aios run skill brain-build
 python3 -m aios reset NOME                     # destrava rotina pausada por falhas
 python3 -m aios serve [--bind IP] [--port N]
 python3 -m aios telegram                       # bot (VPS)
+python3 -m aios export painel.html             # painel como HTML único (foto estática, sem servidor)
 python3 -m aios.measure "pergunta" --expect areas/x.md --runs 2   # mapa ajuda mesmo?
 python3 -m unittest discover -s tests -t .     # testes
 ```
